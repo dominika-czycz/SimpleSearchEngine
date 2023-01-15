@@ -1,44 +1,41 @@
 package com.findwise;
 
+import com.findwise.impl.InMemoryDocumentRepository;
 import com.findwise.impl.SearchEngineImpl;
-import com.findwise.utils.RegexConstants;
+import com.findwise.impl.TFIDFSortEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 import java.io.BufferedReader;
-
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 
 public class Main {
     private static Logger log = LogManager.getLogger(Main.class);
-    public static void main(String[] args) throws IOException {
-        SearchEngine searchEngine = new SearchEngineImpl();
-        List<String> files = List.of("testfile1.txt", "testfile2.txt", "testfile3.txt");
 
-        for (String fileName : files) {
-            try (BufferedReader file = new BufferedReader(new FileReader(fileName))) {
-                String line;
-                while ((line = file.readLine()) != null) {
-                    Arrays.stream(line.split(RegexConstants.WORD_REGEX))
-                            .forEach(word -> searchEngine.indexDocument(fileName, word));
-                }
-            } catch (IOException e) {
-                log.warn("File {} not found.", fileName);
-                e.printStackTrace();
-            }
+    public static void main(String[] args) {
+        String doc1 = "the brown fox jumped over the brown dog";
+        String doc2 = "the lazy brown dog sat in the corner";
+        String doc3 = "the red fox bit the lazy dog";
 
+        SearchEngine searchEngine = new SearchEngineImpl(new TFIDFSortEngine(), new InMemoryDocumentRepository());
+
+        searchEngine.indexDocument("doc1", doc1);
+        searchEngine.indexDocument("doc2", doc2);
+        searchEngine.indexDocument("doc3", doc3);
+
+        System.out.println("Enter search term: ");
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in))) {
+            String phrase = in.readLine();
+            List<IndexEntry> results = searchEngine.search(phrase);
+            System.out.println("Results:  ");
+            results.forEach(System.out::println);
+        } catch (IOException e) {
+            log.error("Error while reading data from console", e);
         }
-        System.out.println("Print search phrase: ");
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        String phrase = in.readLine();
-        Set<String> strings = ((SearchEngineImpl) searchEngine).find(phrase);
-        strings.forEach(System.out::println);
+
     }
 }

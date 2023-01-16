@@ -3,12 +3,15 @@ package com.findwise;
 import com.findwise.impl.InMemoryDocumentRepository;
 import com.findwise.impl.SearchEngineImpl;
 import com.findwise.impl.TFIDFSortEngine;
+import com.findwise.utils.DocumentUtils;
+import com.findwise.utils.RegexConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -16,15 +19,25 @@ public class Main {
     private static Logger log = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
+        String doc1Id = "doc1";
         String doc1 = "the brown fox jumped over the brown dog";
+
+        String doc2Id = "doc2";
         String doc2 = "the lazy brown dog sat in the corner";
+
+        String doc3Id = "doc3";
         String doc3 = "the red fox bit the lazy dog";
 
-        SearchEngine searchEngine = new SearchEngineImpl(new TFIDFSortEngine(), new InMemoryDocumentRepository());
+        DocumentRepository documentRepository = new InMemoryDocumentRepository();
 
-        searchEngine.indexDocument("doc1", doc1);
-        searchEngine.indexDocument("doc2", doc2);
-        searchEngine.indexDocument("doc3", doc3);
+        SearchEngine searchEngine = new SearchEngineImpl(new TFIDFSortEngine(), documentRepository);
+        documentRepository.addDocument(doc1Id, DocumentUtils.parseDocumentToList(doc1));
+        documentRepository.addDocument(doc2Id, DocumentUtils.parseDocumentToList(doc2));
+        documentRepository.addDocument(doc3Id, DocumentUtils.parseDocumentToList(doc3));
+
+        searchEngine.indexDocument(doc1Id, doc1);
+        searchEngine.indexDocument(doc2Id, doc2);
+        searchEngine.indexDocument(doc3Id, doc3);
 
         System.out.println("Enter search term: ");
 

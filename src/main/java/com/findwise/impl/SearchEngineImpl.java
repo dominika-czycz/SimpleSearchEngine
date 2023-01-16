@@ -4,9 +4,9 @@ import com.findwise.DocumentRepository;
 import com.findwise.IndexEntry;
 import com.findwise.DocumentSortEngine;
 import com.findwise.data.Document;
-import com.findwise.utils.RegexConstants;
 import com.findwise.SearchEngine;
-import org.apache.commons.lang3.math.NumberUtils;
+import com.findwise.utils.DocumentUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,8 +26,7 @@ public class SearchEngineImpl implements SearchEngine {
 
     @Override
     public void indexDocument(String id, String content) {
-        List<String> contentList = Arrays.stream(content.split(RegexConstants.WORD_REGEX)).toList();
-        documentRepository.addDocument(id, contentList);
+        List<String> contentList = DocumentUtils.parseDocumentToList(content);
         contentList.forEach(word -> addIndex(id, word));
     }
 
@@ -39,14 +38,14 @@ public class SearchEngineImpl implements SearchEngine {
 
     @Override
     public List<IndexEntry> search(String term) {
-        if (term == null || term.split(RegexConstants.WORD_REGEX).length != NumberUtils.INTEGER_ONE) {
+        if (!DocumentUtils.isSingleTerm(term)) {
             log.warn("Entered term: '{}'. The Search Engine only supports single term searches", term);
             return Collections.emptyList();
         }
 
         Set<IndexEntry> results = invertedIndexes.get(term);
 
-        if (results == null) {
+        if (CollectionUtils.isEmpty(results)) {
             log.info("Term: '{}' not found", term);
             return Collections.emptyList();
         }

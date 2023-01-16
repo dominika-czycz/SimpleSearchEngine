@@ -13,9 +13,9 @@ public class InMemoryDocumentRepository implements DocumentRepository {
     private final Map<String, Document> documentsCache = new HashMap<>();
 
     @Override
-    public void addDocument(String pathToDocument, List<String> content) {
-        log.info("Adding file {} to documents", pathToDocument);
-        documentsCache.putIfAbsent(pathToDocument, new Document(pathToDocument, content));
+    public void addDocument(String documentId, List<String> content) {
+        log.info("Adding file {} to documents", documentId);
+        documentsCache.putIfAbsent(documentId, new Document(documentId, content));
     }
 
     @Override

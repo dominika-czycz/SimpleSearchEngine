@@ -26,6 +26,7 @@ public class SearchEngineImpl implements SearchEngine {
 
     @Override
     public void indexDocument(String id, String content) {
+        documentRepository.addDocument(id, DocumentUtils.parseDocumentToList(content));
         List<String> contentList = DocumentUtils.parseDocumentToList(content);
         contentList.forEach(word -> addIndex(id, word));
     }
@@ -61,7 +62,6 @@ public class SearchEngineImpl implements SearchEngine {
             double score = sortEngine.score(document, allDocuments, term);
             result.setScore(score);
         }
-
         return results;
     }
 

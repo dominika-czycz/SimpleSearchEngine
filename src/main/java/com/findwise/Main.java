@@ -3,15 +3,12 @@ package com.findwise;
 import com.findwise.impl.InMemoryDocumentRepository;
 import com.findwise.impl.SearchEngineImpl;
 import com.findwise.impl.TFIDFSortEngine;
-import com.findwise.utils.DocumentUtils;
-import com.findwise.utils.RegexConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -28,16 +25,12 @@ public class Main {
         String doc3Id = "doc3";
         String doc3 = "the red fox bit the lazy dog";
 
-        DocumentRepository documentRepository = new InMemoryDocumentRepository();
-
-        SearchEngine searchEngine = new SearchEngineImpl(new TFIDFSortEngine(), documentRepository);
-        documentRepository.addDocument(doc1Id, DocumentUtils.parseDocumentToList(doc1));
-        documentRepository.addDocument(doc2Id, DocumentUtils.parseDocumentToList(doc2));
-        documentRepository.addDocument(doc3Id, DocumentUtils.parseDocumentToList(doc3));
+        SearchEngine searchEngine = new SearchEngineImpl(new TFIDFSortEngine(),  new InMemoryDocumentRepository());
 
         searchEngine.indexDocument(doc1Id, doc1);
         searchEngine.indexDocument(doc2Id, doc2);
         searchEngine.indexDocument(doc3Id, doc3);
+
 
         System.out.println("Enter search term: ");
 

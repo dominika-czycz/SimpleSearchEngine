@@ -6,6 +6,7 @@ list that is sorted by TF-IDF (http://en.wikipedia.org/wiki/Tf*idf).
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
+* [Jar](#)
 * [Example](#example)
 * [Demo](#demo)
 * [Contact](#contact)
@@ -23,7 +24,8 @@ list that is sorted by TF-IDF (http://en.wikipedia.org/wiki/Tf*idf).
 * Java 17
 * Junit 5
 * Maven
-
+## Jar
+You can download jar from [target folder](target)
 ## Example
 The following documents are indexed:
 * Document 1: “the brown fox jumped over the brown dog”
